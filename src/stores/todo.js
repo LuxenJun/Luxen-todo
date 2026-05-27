@@ -1,8 +1,21 @@
 import { ref, computed } from 'vue'
 import { defineStore } from 'pinia'
 
-export const useCounterStore = defineStore('counter', () => {
-  const todolist = [
+
+
+function getTime () {
+  return new Date().toLocaleString('zh-CN', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit'
+  })
+}
+
+
+export const useTodoStore = defineStore('todo', () => {
+  const todolist = ref([
     {
       // id时间戳生成
       // eventName
@@ -12,11 +25,11 @@ export const useCounterStore = defineStore('counter', () => {
       
       id:+Date.now(),
       eventName: '学习 js',
-      createAt: new Date().toLocaleString(),
+      createAt: getTime(),
       completedAt: null,
       completed: false
     }
-  ]
+  ])
  function addEvent (valName){
     if (valName.trim() === '') {
       return
@@ -24,7 +37,7 @@ export const useCounterStore = defineStore('counter', () => {
     todolist.value.push({
       id:+Date.now(),
       eventName: valName,
-      createAt: new Date().toLocaleString(),
+      createAt: getTime(),
       completedAt: null,
       completed: false
     })
@@ -35,10 +48,11 @@ export const useCounterStore = defineStore('counter', () => {
   function completeEvent (id){
     todolist.value.forEach(item => {
       if (item.id === id) {
-        item.completed = !item.completed
+        item.completed = true;
+        item.completedAt = getTime()
       }
     })
   }
 
-  return { todolist}
+  return { todolist, addEvent, deleteEvent, completeEvent }
 })
